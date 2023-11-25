@@ -1,11 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
+import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Converter from "./Converter";
-import CurrencyList from "./CurrencyList";
+import Converter from "./components/converter/Converter";
+import ExchangeRates from "./components/list/ExchangeRates";
+import 'normalize.css';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/list",
-        element: <CurrencyList />,
+        element: <ExchangeRates />,
       },
       {
         path: "/converter",
