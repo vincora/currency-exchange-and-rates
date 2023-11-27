@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ExchangeRates.module.scss";
+import CurrencySelector from "../currencySelector/CurrencySelector";
 
 const fetchData = (baseCurrency = "USD") => {
   const apiKey = process.env.REACT_APP_OPEN_EXCHANGE_RATES_API_KEY;
@@ -30,6 +31,7 @@ fetchCurrencies();
 
 const CurrencyList = () => {
   const [currList, setCurrList] = useState({});
+
   useEffect(() => {
     fetchData()
       .then((data) => setCurrList(data))
@@ -37,12 +39,15 @@ const CurrencyList = () => {
   }, []);
 
   return (
-    <ul className={styles.list}>
-      {currList &&
-        Object.keys(currList).map((key) => (
-          <li key={key}>{`${key}: ${currList[key]}`}</li>
-        ))}
-    </ul>
+    <div>
+      <CurrencySelector></CurrencySelector>
+      <ul className={styles.list}>
+        {currList &&
+          Object.keys(currList).map((key) => (
+            <li key={key}>{`${key}: ${currList[key]}`}</li>
+          ))}
+      </ul>
+    </div>
   );
 };
 
