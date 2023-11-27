@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ExchangeRates.module.scss";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 
 const apiKey = process.env.REACT_APP_OPEN_EXCHANGE_RATES_API_KEY;
@@ -51,7 +58,23 @@ const ExchangeRates = () => {
 
   return (
     <div className={styles.template}>
-      <select
+      <Select
+        onChange={(event) => setBaseCurrency(event.target.value)}
+        defaultValue="default"
+      >
+        <SelectTrigger className="w-[180px]" value="default">
+          <SelectValue placeholder="Choose base currency" />
+        </SelectTrigger>
+        <SelectContent>
+          {curr &&
+            Object.keys(curr).map((key) => (
+              <SelectItem key={key} value={key}>
+                {curr[key]}
+              </SelectItem>
+            ))}
+        </SelectContent>
+      </Select>
+      {/* <select
         className={styles.select}
         name="baseCur"
         id=""
@@ -65,7 +88,7 @@ const ExchangeRates = () => {
               {curr[key]}
             </option>
           ))}
-      </select>
+      </select> */}
       <ul className={styles.list}>
         {ratesList &&
           Object.keys(ratesList).map((key) => (
