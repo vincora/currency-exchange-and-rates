@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ExchangeRates.module.scss";
 
-const fetchData = (baseCurrency = "USD") => {
+const fetchRates = (baseCurrency = "USD") => {
   const apiKey = process.env.REACT_APP_OPEN_EXCHANGE_RATES_API_KEY;
   const apiUrl = `https://openexchangerates.org/api/latest.json?app_id=${apiKey}&base=${baseCurrency}`;
 
@@ -22,20 +22,28 @@ const fetchCurrencies = () => {
     "https://openexchangerates.org/api/currencies.json?prettyprint=false&show_alternative=false&show_inactive=false&app_id=0",
     options
   )
-    .then((response) => response.json())
-    .then((response) => console.log(response))
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => data)
     .catch((err) => console.error(err));
 };
-fetchCurrencies();
 
 const CurrencyList = () => {
-  const [currList, setCurrList] = useState({});
-  const [baseCurrency, setBaseCurrency] = useState('USD');
+  const [ratesList, setRatesList] = useState({});
+  const [baseCurrency, setBaseCurrency] = useState("USD");
+  const [curr, setCurr] = useState({});
 
   useEffect(() => {
-    fetchData()
-      .then((data) => setCurrList(data))
-      .catch((err) => console.log(`Error in useEffect: ${err.message}`));
+    fetchRates()
+      .then((data) => setRatesList(data))
+      .catch((err) => console.log(`Error in useEffect fetching rates: ${err.message}`));
+    fetchCurrencies()
+      .then((data) => setCurr(data))
+      .catch((err) => console.log(`Error in useEffect fetching currencies list: ${err.message}`));
   }, []);
 
   return (
@@ -45,14 +53,19 @@ const CurrencyList = () => {
         id=""
         onChange={(event) => setBaseCurrency(event.target.value)}
       >
-        <option value="USD">USD</option>
-        <option value="RUB">RUB</option>
-        <option value="EUR">EUR</option>
+        {curr &&
+          Object.keys(curr).map((key) => (
+            <option key={key} value={key}>
+              {curr[key]}
+            </option>
+          ))}
       </select>
       <ul className={styles.list}>
-        {currList &&
-          Object.keys(currList).map((key) => (
-            <li key={key}>{`${key}: ${currList[key] / currList[baseCurrency]}`}</li>
+        {ratesList &&
+          Object.keys(ratesList).map((key) => (
+            <li key={key}>{`${key}: ${
+              ratesList[key] / ratesList[baseCurrency]
+            }`}</li>
           ))}
       </ul>
     </div>
