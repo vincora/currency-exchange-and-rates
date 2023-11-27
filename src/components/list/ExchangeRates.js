@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ExchangeRates.module.scss";
 
+const apiKey = process.env.REACT_APP_OPEN_EXCHANGE_RATES_API_KEY;
+
 const fetchRates = (baseCurrency = "USD") => {
-  const apiKey = process.env.REACT_APP_OPEN_EXCHANGE_RATES_API_KEY;
+  
   const apiUrl = `https://openexchangerates.org/api/latest.json?app_id=${apiKey}&base=${baseCurrency}`;
 
   return fetch(apiUrl)
@@ -19,7 +21,7 @@ const fetchCurrencies = () => {
   const options = { method: "GET", headers: { accept: "application/json" } };
 
   return fetch(
-    "https://openexchangerates.org/api/currencies.json?prettyprint=false&show_alternative=false&show_inactive=false&app_id=0",
+  `https://openexchangerates.org/api/currencies.json?prettyprint=false&show_alternative=false&show_inactive=false&app_id=${apiKey}`,
     options
   )
     .then((response) => {
@@ -47,12 +49,15 @@ const CurrencyList = () => {
   }, []);
 
   return (
-    <div>
+    <div className={styles.template}>
       <select
+        className={styles.select}
         name="baseCur"
         id=""
         onChange={(event) => setBaseCurrency(event.target.value)}
+        
       >
+        <option value="choose" disabled >Choose base currency</option>
         {curr &&
           Object.keys(curr).map((key) => (
             <option key={key} value={key}>
@@ -64,7 +69,7 @@ const CurrencyList = () => {
         {ratesList &&
           Object.keys(ratesList).map((key) => (
             <li key={key}>{`${key}: ${
-              ratesList[key] / ratesList[baseCurrency]
+              (ratesList[key] / ratesList[baseCurrency]).toFixed(2)
             }`}</li>
           ))}
       </ul>
