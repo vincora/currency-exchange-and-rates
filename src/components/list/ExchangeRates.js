@@ -1,40 +1,41 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ExchangeRates.module.scss";
 
+
 const apiKey = process.env.REACT_APP_OPEN_EXCHANGE_RATES_API_KEY;
 
-const fetchRates = (baseCurrency = "USD") => {
+const fetchRates =  async (baseCurrency = "USD") => {
   
   const apiUrl = `https://openexchangerates.org/api/latest.json?app_id=${apiKey}&base=${baseCurrency}`;
 
-  return fetch(apiUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => data.rates)
-    .catch((err) => console.error(err.message));
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.rates;
+  } catch (err) {
+    return console.error(err.message);
+  }
 };
-const fetchCurrencies = () => {
+const fetchCurrencies = async () => {
   const options = { method: "GET", headers: { accept: "application/json" } };
 
-  return fetch(
-  `https://openexchangerates.org/api/currencies.json?prettyprint=false&show_alternative=false&show_inactive=false&app_id=${apiKey}`,
-    options
-  )
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => data)
-    .catch((err) => console.error(err));
+  try {
+    const response = await fetch(`https://openexchangerates.org/api/currencies.json?prettyprint=false&show_alternative=false&show_inactive=false&app_id=${apiKey}`,
+    options)
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data
+  } catch (err) {
+    return console.error(err.message);
+  }
 };
 
-const CurrencyList = () => {
+const ExchangeRates = () => {
   const [ratesList, setRatesList] = useState({});
   const [baseCurrency, setBaseCurrency] = useState("USD");
   const [curr, setCurr] = useState({});
@@ -55,9 +56,9 @@ const CurrencyList = () => {
         name="baseCur"
         id=""
         onChange={(event) => setBaseCurrency(event.target.value)}
-        
+        defaultValue='default'
       >
-        <option value="choose" disabled >Choose base currency</option>
+        <option value="default" disabled >Choose base currency</option>
         {curr &&
           Object.keys(curr).map((key) => (
             <option key={key} value={key}>
@@ -77,4 +78,4 @@ const CurrencyList = () => {
   );
 };
 
-export default CurrencyList;
+export default ExchangeRates;
