@@ -58,12 +58,12 @@ const ExchangeRates = () => {
 
   return (
     <div className={styles.template}>
+      <h2>Choose base currency</h2>
       <Select
-        onChange={(event) => setBaseCurrency(event.target.value)}
-        defaultValue="default"
+        onValueChange={(value) => setBaseCurrency(value)}
       >
-        <SelectTrigger className="w-[180px]" value="default">
-          <SelectValue placeholder="Choose base currency" />
+        <SelectTrigger className="w-full" value="default">
+          <SelectValue placeholder={baseCurrency} />
         </SelectTrigger>
         <SelectContent>
           {curr &&
@@ -74,21 +74,6 @@ const ExchangeRates = () => {
             ))}
         </SelectContent>
       </Select>
-      {/* <select
-        className={styles.select}
-        name="baseCur"
-        id=""
-        onChange={(event) => setBaseCurrency(event.target.value)}
-        defaultValue='default'
-      >
-        <option value="default" disabled >Choose base currency</option>
-        {curr &&
-          Object.keys(curr).map((key) => (
-            <option key={key} value={key}>
-              {curr[key]}
-            </option>
-          ))}
-      </select> */}
       <ul className={styles.list}>
         {ratesList &&
           Object.keys(ratesList).map((key) => (
