@@ -3,9 +3,9 @@ import styles from "./App.module.scss";
 
 function App() {
   return (
-    <div className={styles.container}>
-      <nav>
-        <ul className={styles.nav}>
+    <div className='container w-3/4 p-4'>
+      <nav className="mb-6">
+        <ul className='flex justify-center gap-4 text-sky-700 text-lg font-medium'>
           <li>
             <Link to="/converter">Converter</Link>
           </li>

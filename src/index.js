@@ -4,9 +4,9 @@ import "./index.css";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Converter from "./components/converter/Converter";
-import ExchangeRates from "./components/list/ExchangeRates";
-import 'normalize.css';
+import Converter from "./components/Converter";
+import ExchangeRates from "./components/ExchangeRates";
+import "normalize.css";
 
 const router = createBrowserRouter([
   {
@@ -21,9 +21,8 @@ const router = createBrowserRouter([
         path: "/converter",
         element: <Converter />,
       },
-    ]
+    ],
   },
-  
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
