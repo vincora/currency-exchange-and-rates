@@ -8,6 +8,7 @@ import {
 } from "./ui/select";
 import {
   Table,
+  TableBody,
   TableCell,
   TableHead,
   TableHeader,
@@ -72,7 +73,10 @@ const ExchangeRates = () => {
     <div>
       <div className="space-y-2">
         <label className="text-sm font-medium">Choose base currency</label>
-        <Select value={baseCurrency} onValueChange={(value) => setBaseCurrency(value)}>
+        <Select
+          value={baseCurrency}
+          onValueChange={(value) => setBaseCurrency(value)}
+        >
           <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
@@ -86,26 +90,26 @@ const ExchangeRates = () => {
           </SelectContent>
         </Select>
       </div>
-      <Table className='mt-4'>
+      <Table className="mt-4">
         <TableHeader>
           <TableRow>
-            <TableHead className='w-0'>Code</TableHead>
+            <TableHead className="w-0">Code</TableHead>
             <TableHead>Currency</TableHead>
-            <TableHead className="text-right">
-              Quote
-            </TableHead>
+            <TableHead className="text-right">Quote</TableHead>
           </TableRow>
         </TableHeader>
-        {ratesList &&
-          Object.keys(ratesList).map((key) => (
-            <TableRow key={key}>
-              <TableCell>{key}</TableCell>
-              <TableCell>{curr[key]}</TableCell>
-              <TableCell className="text-right">
-                {(ratesList[key] / ratesList[baseCurrency]).toFixed(2)}
-              </TableCell>
-            </TableRow>
-          ))}
+        <TableBody>
+          {ratesList &&
+            Object.keys(ratesList).map((key) => (
+              <TableRow key={key}>
+                <TableCell>{key}</TableCell>
+                <TableCell>{curr[key]}</TableCell>
+                <TableCell className="text-right">
+                  {(ratesList[key] / ratesList[baseCurrency]).toFixed(2)}
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
       </Table>
     </div>
   );
