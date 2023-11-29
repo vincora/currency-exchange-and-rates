@@ -13,6 +13,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      { index: true, element: <ExchangeRates /> },
       {
         path: "/list",
         element: <ExchangeRates />,
