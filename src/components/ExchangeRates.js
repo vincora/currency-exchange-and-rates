@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -15,24 +15,17 @@ import {
   TableRow,
 } from "./ui/table";
 import { useQuery } from "@tanstack/react-query";
-import fetchRates from "./fetchRates";
+import { useRates } from "./fetchRates";
 import fetchCurrencies from "./fetchCurrencies";
-
 
 const ExchangeRates = () => {
   const [baseCurrency, setBaseCurrency] = useState("USD");
-  const ratesQuery = useQuery({
-    queryKey: ["ratesList"],
-    queryFn: fetchRates });
+  const ratesQuery = useRates();
 
   const currenciesQuery = useQuery({
     queryKey: ["currencies"],
     queryFn: fetchCurrencies,
   });
-
-  useEffect(() => {
-    ratesQuery.refetch();
-  }, [baseCurrency, ratesQuery]);
 
   if (ratesQuery.isLoading) {
     return <h3>Loading...</h3>;
@@ -40,8 +33,8 @@ const ExchangeRates = () => {
   if (ratesQuery.isError) {
     return <h3>{JSON.stringify(ratesQuery.error)}</h3>;
   }
-  if (!ratesQuery.data){
-    return <h3>No data</h3>
+  if (!ratesQuery.data) {
+    return <h3>No data</h3>;
   }
 
   return (
@@ -74,18 +67,19 @@ const ExchangeRates = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {
-            Object.keys(ratesQuery.data).map((key) => (
-              <TableRow key={key}>
-                <TableCell>{key}</TableCell>
-                <TableCell>{currenciesQuery.data && currenciesQuery.data[key]}</TableCell>
-                <TableCell className="text-right">
-                  {(
-                    ratesQuery.data[key] / ratesQuery.data[baseCurrency]
-                  ).toFixed(2)}
-                </TableCell>
-              </TableRow>
-            ))}
+          {Object.keys(ratesQuery.data).map((key) => (
+            <TableRow key={key}>
+              <TableCell>{key}</TableCell>
+              <TableCell>
+                {currenciesQuery.data && currenciesQuery.data[key]}
+              </TableCell>
+              <TableCell className="text-right">
+                {(ratesQuery.data[key] / ratesQuery.data[baseCurrency]).toFixed(
+                  2
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>
