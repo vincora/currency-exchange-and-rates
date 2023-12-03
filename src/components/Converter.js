@@ -52,7 +52,7 @@ const Converter = () => {
   };
 
   const onSubmit = ({ input }) => {
-    setInput(input);
+    setInput(parseInput(input).map(item => item.toLowerCase()).join(' '));
     countQuery(input);
   };
 
