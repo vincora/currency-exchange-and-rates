@@ -14,18 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { useQuery } from "@tanstack/react-query";
+
 import { useRates } from "./fetchRates";
-import fetchCurrencies from "./fetchCurrencies";
+import { useCurrencies } from "./fetchCurrencies";
 
 const ExchangeRates = () => {
   const [baseCurrency, setBaseCurrency] = useState("USD");
   const ratesQuery = useRates();
-
-  const currenciesQuery = useQuery({
-    queryKey: ["currencies"],
-    queryFn: fetchCurrencies,
-  });
+  const currenciesQuery = useCurrencies();
 
   if (ratesQuery.isLoading) {
     return <h3>Loading...</h3>;

@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 const apiKey = process.env.REACT_APP_OPEN_EXCHANGE_RATES_API_KEY;
 
 const fetchCurrencies = async () => {
@@ -10,4 +11,9 @@ const fetchCurrencies = async () => {
   return data;
 };
 
-export default fetchCurrencies;
+export const useCurrencies = () => {
+  return useQuery({
+    queryKey: ["currencies"],
+    queryFn: fetchCurrencies,
+  });
+};
