@@ -2,39 +2,50 @@ import { useState, useEffect, useMemo } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-import { cn } from "../lib/utils";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useRates } from "./fetchRates";
 import { useCurrencies } from "./fetchCurrencies";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "../lib/utils";
 
 const Converter = () => {
   const [input, setInput] = useState("");
   const [convertedData, setConvertedData] = useState();
   const ratesQuery = useRates();
+  const { data } = useCurrencies();
+
+  const schema = useMemo(() => {
+    if (data) {
+      const currencies = Object.keys(data);
+      const regexStr = currencies.join("|");
+      const regex = new RegExp(
+        "^\\s*\\d+\\s+(" + regexStr + ")\\s+in\\s+(" + regexStr + ")\\s*$",
+        "i"
+      );
+      return z.object({
+        input: z.string().regex(regex, {
+          message: "Invalid input",
+        }),
+      });
+    }
+
+    return z.object({
+      input: z.string(),
+    });
+  }, [data]);
+
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitSuccessful },
+    formState: { isSubmitSuccessful, errors },
     reset,
   } = useForm({
+    resolver: zodResolver(schema),
     defaultValues: {
       input: "",
     },
   });
-
-  const { data } = useCurrencies();
-
-  const regex = useMemo(() => {
-    console.log("useMemo", { data });
-    const currencies = Object.keys(data ?? {});
-
-    const str = currencies.join("|");
-
-    return new RegExp(
-      "^\\s*\\d+\\s+(" + str + ")\\s+in\\s+(" + str + ")\\s*$",
-      "i"
-    );
-  }, [data]);
 
   const parseInput = (input) => {
     return input.trim().replace(/\s+/g, " ").split(" ");
@@ -52,13 +63,17 @@ const Converter = () => {
   };
 
   const onSubmit = ({ input }) => {
-    setInput(parseInput(input).map(item => item.toLowerCase()).join(' '));
+    setInput(
+      parseInput(input)
+        .map((item) => item.toLowerCase())
+        .join(" ")
+    );
     countQuery(input);
   };
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      reset({ input: "" });
+      reset();
     }
   }, [isSubmitSuccessful, reset]);
 
@@ -68,12 +83,7 @@ const Converter = () => {
       <Controller
         name="input"
         control={control}
-        rules={{
-          pattern: {
-            value: regex,
-            message: "Invalid input",
-          },
-        }}
+        
         render={({ field, fieldState }) => (
           <div>
             <Input
@@ -91,7 +101,9 @@ const Converter = () => {
           </div>
         )}
       />
-      <Button className="bg-sky-800 mt-4">Calculate</Button>
+      <Button type="submit" className="bg-sky-800 mt-4">
+        Calculate
+      </Button>
       {convertedData && (
         <div className="mt-4">{`${input} = ${convertedData}`}</div>
       )}
