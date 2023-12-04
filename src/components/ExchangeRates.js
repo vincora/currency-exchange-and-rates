@@ -33,6 +33,14 @@ const ExchangeRates = () => {
     return <h3>No data</h3>;
   }
 
+  function formatNumber(number) {
+    if (number >= 1) {
+      return parseFloat(number.toFixed(2));
+    } else {
+      return parseFloat(number.toPrecision(2));
+    }
+  }
+
   return (
     <div>
       <div className="space-y-2">
@@ -70,9 +78,8 @@ const ExchangeRates = () => {
                 {currenciesQuery.data && currenciesQuery.data[key]}
               </TableCell>
               <TableCell className="text-right">
-                {(ratesQuery.data[key] / ratesQuery.data[baseCurrency]).toFixed(
-                  2
-                )}
+                {(ratesQuery.data[key] / ratesQuery.data[baseCurrency])} |
+                {formatNumber((ratesQuery.data[key] / ratesQuery.data[baseCurrency]))}
               </TableCell>
             </TableRow>
           ))}
