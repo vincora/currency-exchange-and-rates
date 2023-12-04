@@ -78,7 +78,7 @@ const ExchangeRates = () => {
                 {currenciesQuery.data && currenciesQuery.data[key]}
               </TableCell>
               <TableCell className="text-right">
-                {(ratesQuery.data[key] / ratesQuery.data[baseCurrency])} |
+                {/* {(ratesQuery.data[key] / ratesQuery.data[baseCurrency])} | */}
                 {formatNumber((ratesQuery.data[key] / ratesQuery.data[baseCurrency]))}
               </TableCell>
             </TableRow>
