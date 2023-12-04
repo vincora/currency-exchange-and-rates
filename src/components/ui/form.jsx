@@ -2,8 +2,8 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { Controller, FormProvider, useFormContext } from "react-hook-form";
 
-import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
+import { cn } from "../../lib/utils"
+import { Label } from "./label"
 
 const Form = FormProvider
 
@@ -48,10 +48,12 @@ const FormItemContext = React.createContext({})
 
 const FormItem = React.forwardRef(({ className, ...props }, ref) => {
   const id = React.useId()
+  const { error } = useFormField()
+  console.log(error)
 
   return (
     (<FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <div ref={ref} className={cn(error && 'text-red-600', "space-y-2", className)} {...props} />
     </FormItemContext.Provider>)
   );
 })
