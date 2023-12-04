@@ -16,22 +16,21 @@ const Converter = () => {
   const { data } = useCurrencies();
 
   const schema = useMemo(() => {
-    if (data) {
-      const currencies = Object.keys(data);
-      const regexStr = currencies.join("|");
-      const regex = new RegExp(
-        "^\\s*\\d+\\s+(" + regexStr + ")\\s+in\\s+(" + regexStr + ")\\s*$",
-        "i"
-      );
+    if (!data) {
       return z.object({
-        input: z.string().regex(regex, {
-          message: "Invalid input",
-        }),
+        input: z.string(),
       });
     }
-
+    const currencies = Object.keys(data);
+    const regexStr = currencies.join("|");
+    const regex = new RegExp(
+      "^\\s*\\d+\\s+(" + regexStr + ")\\s+in\\s+(" + regexStr + ")\\s*$",
+      "i"
+    );
     return z.object({
-      input: z.string(),
+      input: z.string().regex(regex, {
+        message: "Invalid input",
+      }),
     });
   }, [data]);
 
@@ -83,7 +82,6 @@ const Converter = () => {
       <Controller
         name="input"
         control={control}
-        
         render={({ field, fieldState }) => (
           <div>
             <Input
