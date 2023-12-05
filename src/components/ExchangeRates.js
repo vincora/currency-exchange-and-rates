@@ -40,11 +40,7 @@ const ExchangeRates = () => {
       const decimalIndex = Array.from(String(num).substring(2)).findIndex(
         (digit) => digit !== "0"
       );
-      if (decimalIndex !== -1) {
-        return num.toFixed(decimalIndex + 2);
-      } else {
-        return num;
-      }
+      return num.toFixed(decimalIndex + 2);
     }
   }
 
