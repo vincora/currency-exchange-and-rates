@@ -33,11 +33,18 @@ const ExchangeRates = () => {
     return <h3>No data</h3>;
   }
 
-  function formatNumber(number) {
-    if (number >= 1) {
-      return parseFloat(number.toFixed(2));
+  function formatNumber(num) {
+    if (num >= 1) {
+      return num.toFixed(2);
     } else {
-      return parseFloat(number.toPrecision(2));
+      const decimalIndex = Array.from(String(num).substring(2)).findIndex(
+        (digit) => digit !== "0"
+      );
+      if (decimalIndex !== -1) {
+        return num.toFixed(decimalIndex + 2);
+      } else {
+        return num;
+      }
     }
   }
 
@@ -79,7 +86,9 @@ const ExchangeRates = () => {
               </TableCell>
               <TableCell className="text-right">
                 {/* {(ratesQuery.data[key] / ratesQuery.data[baseCurrency])} | */}
-                {formatNumber((ratesQuery.data[key] / ratesQuery.data[baseCurrency]))}
+                {formatNumber(
+                  ratesQuery.data[key] / ratesQuery.data[baseCurrency]
+                )}
               </TableCell>
             </TableRow>
           ))}
