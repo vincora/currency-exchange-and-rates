@@ -18,6 +18,7 @@ import { RotatingLines } from "react-loader-spinner";
 
 import { useRates } from "./fetchRates";
 import { useCurrencies } from "./fetchCurrencies";
+import { Button } from "./ui/button";
 
 const ExchangeRates = () => {
   const [baseCurrency, setBaseCurrency] = useState("USD");
@@ -39,7 +40,14 @@ const ExchangeRates = () => {
   }
 
   if (ratesQuery.isError) {
-    return <h3 className="flex justify-center">{JSON.stringify(ratesQuery.error)}</h3>;
+    return (
+      <div className="flex flex-col items-center gap-4">
+        <h3 >
+          Error: {ratesQuery.error.message}
+        </h3>
+        <Button className="bg-sky-800" onClick={() => ratesQuery.refetch()}>Refetch data</Button>
+      </div>
+    );
   }
   if (!ratesQuery.data) {
     return <h3>No data</h3>;

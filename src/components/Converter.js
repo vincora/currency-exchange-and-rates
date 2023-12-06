@@ -91,7 +91,14 @@ const Converter = () => {
     );
   }
   if (ratesQuery.isError) {
-    return <h3>{JSON.stringify(ratesQuery.error)}</h3>;
+    return (
+      <div className="flex flex-col items-center gap-4">
+        <h3 >
+          Error: {ratesQuery.error.message}
+        </h3>
+        <Button className="bg-sky-800" onClick={() => ratesQuery.refetch()}>Refetch data</Button>
+      </div>
+    );
   }
   if (!ratesQuery.data) {
     return <h3>No data</h3>;
