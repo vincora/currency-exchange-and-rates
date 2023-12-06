@@ -8,6 +8,7 @@ import { useCurrencies } from "./fetchCurrencies";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "../lib/utils";
+import { RotatingLines } from "react-loader-spinner";
 
 const Converter = () => {
   const [input, setInput] = useState("");
@@ -75,6 +76,26 @@ const Converter = () => {
       reset();
     }
   }, [isSubmitSuccessful, reset]);
+
+  if (ratesQuery.isLoading) {
+    return (
+      <div className="flex justify-center">
+        <RotatingLines
+          strokeColor="grey"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="96"
+          visible={true}
+        />
+      </div>
+    );
+  }
+  if (ratesQuery.isError) {
+    return <h3>{JSON.stringify(ratesQuery.error)}</h3>;
+  }
+  if (!ratesQuery.data) {
+    return <h3>No data</h3>;
+  }
 
   return (
     <form name="form" onSubmit={handleSubmit(onSubmit)}>

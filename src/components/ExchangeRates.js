@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { RotatingLines } from "react-loader-spinner";
 
 import { useRates } from "./fetchRates";
 import { useCurrencies } from "./fetchCurrencies";
@@ -24,10 +25,21 @@ const ExchangeRates = () => {
   const currenciesQuery = useCurrencies();
 
   if (ratesQuery.isLoading) {
-    return <h3>Loading...</h3>;
+    return (
+      <div className="flex justify-center">
+        <RotatingLines
+          strokeColor="grey"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="96"
+          visible={true}
+        />
+      </div>
+    );
   }
+
   if (ratesQuery.isError) {
-    return <h3>{JSON.stringify(ratesQuery.error)}</h3>;
+    return <h3 className="flex justify-center">{JSON.stringify(ratesQuery.error)}</h3>;
   }
   if (!ratesQuery.data) {
     return <h3>No data</h3>;
@@ -81,7 +93,6 @@ const ExchangeRates = () => {
                 {currenciesQuery.data && currenciesQuery.data[key]}
               </TableCell>
               <TableCell className="text-right">
-                {/* {(ratesQuery.data[key] / ratesQuery.data[baseCurrency])} | */}
                 {formatNumber(
                   ratesQuery.data[key] / ratesQuery.data[baseCurrency]
                 )}
